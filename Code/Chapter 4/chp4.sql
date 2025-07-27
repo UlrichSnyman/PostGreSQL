@@ -9,7 +9,7 @@
 -- This is example syntax only; running it will produce an error
 
 COPY table_name
-FROM 'C:\YourDirectory\your_file.csv'
+FROM 'C:\YourDirectory\C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter 4.csv'
 WITH (FORMAT CSV, HEADER);
 
 
@@ -130,8 +130,8 @@ SELECT * FROM us_counties_2010;
 -- Windows users: Please check the Note on page xxvii as well.
 
 COPY us_counties_2010
-FROM 'C:\YourDirectory\us_counties_2010.csv'
-WITH (FORMAT CSV, HEADER);
+FROM 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter 4\us_counties_2010.csv'
+WITH (FORMAT CSV, HEADER, DELIMITER ',');
 
 -- Checking the data
 
@@ -162,7 +162,7 @@ CREATE TABLE supervisor_salaries (
 -- Listing 4-5: Importing salaries data from CSV to three table columns
 
 COPY supervisor_salaries (town, supervisor, salary)
-FROM 'C:\YourDirectory\supervisor_salaries.csv'
+FROM 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter 4\supervisor_salaries.csv'
 WITH (FORMAT CSV, HEADER);
 
 -- Check the data
@@ -171,16 +171,16 @@ SELECT * FROM supervisor_salaries LIMIT 2;
 -- Listing 4-6 Use a temporary table to add a default value to a column during
 -- import
 
-DELETE FROM supervisor_salaries;
+DELETE FROM supervisor_salaries where town ilike 'anytown';
 
 CREATE TEMPORARY TABLE supervisor_salaries_temp (LIKE supervisor_salaries);
 
 COPY supervisor_salaries_temp (town, supervisor, salary)
-FROM 'C:\YourDirectory\supervisor_salaries.csv'
+FROM 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter 4\supervisor_salaries.csv'
 WITH (FORMAT CSV, HEADER);
 
 INSERT INTO supervisor_salaries (town, county, supervisor, salary)
-SELECT town, 'Some County', supervisor, salary
+SELECT town, 'Some County' as RandomField, supervisor, salary
 FROM supervisor_salaries_temp;
 
 DROP TABLE supervisor_salaries_temp;
@@ -208,5 +208,14 @@ COPY (
     FROM us_counties_2010
     WHERE geo_name ILIKE '%mill%'
      )
-TO 'C:\YourDirectory\us_counties_mill_export.txt'
+TO 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter 4\us_counties_mill_export.txt'
+WITH (FORMAT CSV, HEADER, DELIMITER '|');
+
+
+Challenge 
+SELECT * FROM us_counties_2010 
+
+COPY (SELECT geo_name, state_us_abbreviation, housing_unit_count_100_percent FROM us_counties_2010
+ORDER BY housing_unit_count_100_percent DESC LIMIT 20) 
+TO 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter 4\Challenge.csv'
 WITH (FORMAT CSV, HEADER, DELIMITER '|');
