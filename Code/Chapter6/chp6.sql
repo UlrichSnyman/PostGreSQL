@@ -108,7 +108,7 @@ FROM schools_left CROSS JOIN schools_right;
 SELECT *
 FROM schools_left LEFT JOIN schools_right
 ON schools_left.id = schools_right.id
-WHERE schools_right.id IS NULL;
+WHERE schools_right.id IS NOT NULL;
 
 -- Listing 6-10: Querying specific columns in a join
 SELECT schools_left.id,
@@ -129,7 +129,7 @@ CREATE TABLE schools_enrollment (
     id integer,
     enrollment integer
 );
-
+-- 
 CREATE TABLE schools_grades (
     id integer,
     grades varchar(10)
@@ -194,3 +194,58 @@ ON c2010.state_fips = c2000.state_fips
    AND c2010.county_fips = c2000.county_fips
    AND c2010.p0010001 <> c2000.p0010001
 ORDER BY pct_change DESC;
+
+
+
+
+
+-- Full example Challenge
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,                           -- Primary key: unique ID auto-incremented
+    username VARCHAR(50) UNIQUE NOT NULL,            -- Must be unique and not null
+    email VARCHAR(100) NOT NULL,                     -- Must not be null
+    age INT CHECK (age >= 13),                       -- Must be 13 or older
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Defaults to now if not provided
+    is_active BOOLEAN DEFAULT TRUE                   -- Defaults to TRUE
+);
+
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,                     -- Unique ID for each order
+    user_id INT NOT NULL,                            -- Foreign key linking to users.id
+    product_name VARCHAR(100) NOT NULL,
+    quantity INT CHECK (quantity > 0),
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_user                               -- Naming the foreign key constraint
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+);
+
+Select * from users
+Select * from orders
+
+INSERT INTO users (username, email, age)
+VALUES
+('alice123', 'alice@example.com', 25),
+('bobster', 'bob@example.com', 30),
+('charlieX', 'charlie@example.com', 19),
+('diana_q', 'diana@example.com', 42),
+('evan_the_great', 'evan@example.com', 17);
+
+INSERT INTO orders (user_id, product_name, quantity)
+VALUES
+(1, 'Wireless Mouse', 2),
+(1, 'Keyboard', 1),
+(2, 'Monitor', 1),
+(3, 'USB-C Cable', 3),
+(5, 'Gaming Headset', 1);
+
+SELECT 
+    users.username,
+    users.email,
+    orders.product_name,
+    orders.quantity,
+    -- orders.order_date,
+	orders.user_id
+FROM orders
+JOIN users ON orders.user_id = users.id;
