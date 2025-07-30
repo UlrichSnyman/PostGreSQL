@@ -14,6 +14,8 @@ CREATE TABLE natural_key_example (
     last_name varchar(50)
 );
 
+SELECT * FROM natural_key_example
+
 -- Drop the table before trying again
 DROP TABLE natural_key_example;
 
@@ -43,13 +45,13 @@ CREATE TABLE natural_key_composite_example (
 -- Listing 7-4: Example of a composite primary key violation
 
 INSERT INTO natural_key_composite_example (student_id, school_day, present)
-VALUES(775, '1/22/2017', 'Y');
+VALUES (775, '2017-01-22', 'Y');
 
 INSERT INTO natural_key_composite_example (student_id, school_day, present)
-VALUES(775, '1/23/2017', 'Y');
+VALUES (775, '2017-01-23', 'Y');
 
 INSERT INTO natural_key_composite_example (student_id, school_day, present)
-VALUES(775, '1/23/2017', 'N');
+VALUES (775, '2017-01-23', 'N');
 
 -- Listing 7-5: Declaring a bigserial column as a surrogate key
 
@@ -165,8 +167,10 @@ CREATE TABLE new_york_addresses (
 );
 
 COPY new_york_addresses
-FROM 'C:\YourDirectory\city_of_new_york.csv'
+FROM 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter7\city_of_new_york.csv'
 WITH (FORMAT CSV, HEADER);
+
+SELECT * from new_york_addresses
 
 -- Listing 7-12: Benchmark queries for index performance
 
@@ -183,7 +187,7 @@ WHERE street = 'ZWICKY AVENUE';
 
 CREATE INDEX street_idx ON new_york_addresses (street);
 
-
+Drop index street_idx
 
 
 -- Challenge:
@@ -209,3 +213,5 @@ INSERT INTO students (name, class_id) VALUES ('Alice', 1), ('Bob', 2);
 
 SELECT * FROM classes
 SELECT * FROM students
+
+
