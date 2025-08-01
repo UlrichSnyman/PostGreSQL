@@ -22,7 +22,7 @@ CREATE TABLE meat_poultry_egg_inspect (
 );
 
 COPY meat_poultry_egg_inspect
-FROM 'C:\YourDirectory\MPI_Directory_by_Establishment_Name.csv'
+FROM 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter9\MPI_Directory_by_Establishment_Name.csv'
 WITH (FORMAT CSV, HEADER, DELIMITER ',');
 
 CREATE INDEX company_idx ON meat_poultry_egg_inspect (company);
@@ -47,6 +47,20 @@ SELECT st,
 FROM meat_poultry_egg_inspect
 GROUP BY st
 ORDER BY st;
+
+SELECT DISTINCT st,
+       (SELECT COUNT(*) 
+        FROM meat_poultry_egg_inspect AS m2 
+        WHERE m2.st = m1.st) AS st_count
+FROM meat_poultry_egg_inspect AS m1;
+
+
+
+
+SELECT DISTINCT ON (st) st, 
+COUNT(*) OVER (PARTITION BY st) AS st_count
+FROM meat_poultry_egg_inspect
+
 
 -- Listing 9-4: Using IS NULL to find missing values in the st column
 SELECT est_number,
@@ -111,6 +125,10 @@ ORDER BY st;
 UPDATE meat_poultry_egg_inspect
 SET st = 'MN'
 WHERE est_number = 'V18677A';
+
+SELECT st, est_number
+From meat_poultry_egg_inspect
+WHERE est_number = 'M263A+P263A+V263A';
 
 UPDATE meat_poultry_egg_inspect
 SET st = 'AL'
@@ -202,6 +220,8 @@ ORDER BY st;
 DELETE FROM meat_poultry_egg_inspect
 WHERE st IN('PR','VI');
 
+SELECT * from meat_poultry_egg_inspect
+WHERE st IN('PR','VI');
 -- Listing 9-22: Remove a column from a table using DROP
 
 ALTER TABLE meat_poultry_egg_inspect DROP COLUMN zip_copy;
@@ -253,7 +273,33 @@ FROM meat_poultry_egg_inspect;
 -- Listing 9-26: Swapping table names using ALTER TABLE
 
 ALTER TABLE meat_poultry_egg_inspect RENAME TO meat_poultry_egg_inspect_temp;
-ALTER TABLE meat_poultry_egg_inspect_backup RENAME TO meat_poultry_egg_inspect;
+-- ALTER TABLE meat_poultry_egg_inspect_backup RENAME TO meat_poultry_egg_inspect;
 ALTER TABLE meat_poultry_egg_inspect_temp RENAME TO meat_poultry_egg_inspect_backup;
 
 
+
+
+
+
+
+
+
+
+
+CREATE TABLE employees (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+INSERT INTO employees (name) 
+VALUES 
+('Alice'), 
+('Bob');
+
+ALTER TABLE employees ADD COLUMN department VARCHAR(50);
+
+UPDATE employees
+SET department = 'Engineering'
+WHERE name = 'Alice';
+
+SELECT * FROM employees;
