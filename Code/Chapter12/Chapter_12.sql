@@ -308,3 +308,62 @@ SELECT station_name, max_temperature_group, count(*)
 FROM temps_collapsed
 GROUP BY station_name, max_temperature_group
 ORDER BY station_name, count(*) DESC;
+
+
+
+
+
+
+-- Challenge
+
+CREATE TABLE courses (
+    course_id SERIAL PRIMARY KEY,
+    course_name VARCHAR(100),
+    course_code CHAR(6),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE students2 (
+    student_id SERIAL PRIMARY KEY,
+    student_name VARCHAR(100),
+    course_id INTEGER REFERENCES courses(course_id),
+    email TEXT,
+    birth_date DATE,
+    gpa NUMERIC(3,2)
+);
+
+INSERT INTO courses (course_name, course_code, is_active)
+VALUES 
+('Mathematics', 'MTH101', TRUE),
+('Physics', 'PHY102', TRUE),
+('History', 'HIS103', FALSE);
+
+INSERT INTO students2 (student_name, course_id, email, birth_date, gpa)
+VALUES 
+('Alice Johnson', 1, 'alice@example.com', '2005-06-12', 3.75),
+('Bob Smith', 2, 'bob@example.com', '2004-11-23', 3.20),
+('Charlie Brown', 3, 'charlie@example.com', '2006-02-18', 3.90);
+
+ALTER TABLE courses
+ADD COLUMN department VARCHAR(50);
+
+ALTER TABLE students2
+ADD COLUMN enrolled BOOLEAN DEFAULT TRUE;
+
+ALTER TABLE students2
+ALTER COLUMN email TYPE VARCHAR(150);
+
+
+
+SELECT s.student_name, c.course_name
+FROM students2 s
+JOIN courses c ON s.course_id = c.course_id;
+
+COPY (
+    SELECT *
+    FROM students2 s
+    JOIN courses c ON s.course_id = c.course_id
+)
+TO 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter12\student_courses.csv'
+WITH (FORMAT CSV, HEADER);
