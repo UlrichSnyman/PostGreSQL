@@ -17,6 +17,7 @@ WHERE p0010001 >= (
     )
 ORDER BY p0010001 DESC;
 
+SELECT count(*) from us_counties_2010
 -- Listing 12-2: Using a subquery in a WHERE clause for DELETE
 
 CREATE TABLE us_counties_2010_top10 AS
@@ -111,7 +112,7 @@ VALUES (2, 'Lee', 'Smith'),
        (4, 'Janet', 'King');
 
 -- Generating values for the IN operator
-SELECT first_name, last_name
+-- SELECT first_name, last_name
 FROM employees
 WHERE emp_id IN (
     SELECT id
