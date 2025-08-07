@@ -70,7 +70,7 @@ CREATE TABLE crime_reports (
 );
 
 COPY crime_reports (original_text)
-FROM 'C:\YourDirectory\crime_reports.csv'
+FROM 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter13\crime_reports.csv'
 WITH (FORMAT CSV, HEADER OFF, QUOTE '"');
 
 SELECT original_text FROM crime_reports;
@@ -162,7 +162,7 @@ SET date_1 =
           ||' US/Eastern'
     )::timestamptz,
              
-    date_2 = 
+    -- date_2 = 
     CASE 
     -- if there is no second date but there is a second hour
         WHEN (SELECT regexp_match(original_text, '-(\d{1,2}\/\d{1,2}\/\d{1,2})') IS NULL)
@@ -265,7 +265,7 @@ CREATE TABLE president_speeches (
 );
 
 COPY president_speeches (president, title, speech_date, speech_text)
-FROM 'C:\YourDirectory\sotu-1946-1977.csv'
+FROM 'C:\Users\ulric\OneDrive\Documents\Code College\Web bootcamp\SQL\Code\Chapter13\sotu-1946-1977.csv'
 WITH (FORMAT CSV, DELIMITER '|', HEADER OFF, QUOTE '@');
 
 SELECT * FROM president_speeches;
@@ -361,3 +361,51 @@ ORDER BY score DESC
 LIMIT 5;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE subscribers (
+    id SERIAL PRIMARY KEY,
+    
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    email TEXT NOT NULL,
+    
+    CONSTRAINT username_capital
+        CHECK (username ~ '^[A-Z]'),
+    CONSTRAINT password_numeric
+        CHECK (password ~ '^[0-9]+$'),
+    CONSTRAINT email_format
+        CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
+);
+DROP TABLE subscribers
+SELECT * FROM subscribers
+
+INSERT INTO subscribers (username, password, email)
+VALUES
+('Alice123', '12345678', 'alice@example.com'),
+('BrianX', '987654', 'brianx@gmail.com'),
+('Charles', '20252025', 'charles@domain.org');
