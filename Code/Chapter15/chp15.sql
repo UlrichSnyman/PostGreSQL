@@ -389,7 +389,6 @@ EXECUTE FUNCTION log_student_insert();
 CREATE OR REPLACE FUNCTION award_scholarship()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Award based on GPA
     IF NEW.gpa >= 3.8 THEN
         NEW.scholarship := 2000.00;
     ELSIF NEW.gpa >= 3.5 THEN
@@ -399,8 +398,7 @@ BEGIN
     ELSE
         NEW.scholarship := 0.00;
     END IF;
-
-    -- Return modified row
+ -- Return row
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -417,5 +415,5 @@ VALUES
 ('Charlie Brown', 2.8);
 
 SELECT * FROM students;
-
+SELECT current_user;
 
