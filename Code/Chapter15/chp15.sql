@@ -160,6 +160,7 @@ $$ LANGUAGE plpgsql;
 
 -- To run the function:
 SELECT update_personal_days();
+SELECT * FROM teachers
 
 -- Listing 15-14: Enabling the PL/Python procedural language
 
@@ -351,6 +352,7 @@ $$ LANGUAGE plpgsql;
 
 SELECT * FROM reward_high_gpa_students();
 SELECT * FROM students
+SELECT * FROM student_log
 
 INSERT INTO students (student_name, gpa)
 VALUES 
@@ -360,9 +362,60 @@ VALUES
 
 
 
+--Challenge 2
+CREATE TABLE student_log (
+    log_id SERIAL PRIMARY KEY,
+    student_name TEXT,
+    action TEXT,
+    action_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
+CREATE OR REPLACE FUNCTION log_student_insert()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO student_log (student_name, action)
+    VALUES (NEW.student_name, 'INSERT');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE TRIGGER trigger_log_student_insert
+AFTER INSERT ON students
+FOR EACH ROW
+EXECUTE FUNCTION log_student_insert();
 
+-- Challenge 3
 
+CREATE OR REPLACE FUNCTION award_scholarship()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Award based on GPA
+    IF NEW.gpa >= 3.8 THEN
+        NEW.scholarship := 2000.00;
+    ELSIF NEW.gpa >= 3.5 THEN
+        NEW.scholarship := 1000.00;
+    ELSIF NEW.gpa >= 3.0 THEN
+        NEW.scholarship := 500.00;
+    ELSE
+        NEW.scholarship := 0.00;
+    END IF;
+
+    -- Return modified row
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_award_scholarship
+BEFORE INSERT OR UPDATE OF gpa ON students
+FOR EACH ROW
+EXECUTE FUNCTION award_scholarship();
+
+INSERT INTO students (student_name, gpa)
+VALUES
+('Alice Johnson', 3.9),
+('Bob Smith', 3.6),
+('Charlie Brown', 2.8);
+
+SELECT * FROM students;
 
 
