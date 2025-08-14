@@ -180,7 +180,7 @@ BEGIN
         NOW()
     )
     RETURNING OrderID INTO v_order_id;
-
+-- 
     -- B: Insert cart contents into OrderDetails
     INSERT INTO OrderDetails (OrderHeaderID, ProdID, Qty)
     SELECT v_order_id, ProductId, Qty
@@ -203,7 +203,7 @@ SELECT add_to_cart(2); -- Chips
 SELECT * FROM cart;  
 
 -- Remove
-SELECT remove_from_cart(1, 105);  -- Coke
+SELECT remove_from_cart(1, 200);  -- Coke
 SELECT * FROM cart;
 
 -- First checkout for user 1
@@ -224,7 +224,7 @@ FROM OrderHeader oh
 INNER JOIN Users u ON oh.User_ID = u.User_ID
 INNER JOIN OrderDetails od ON oh.OrderID = od.OrderHeaderID
 INNER JOIN ProductsMenu pm ON od.ProdID = pm.Id
-WHERE oh.OrderID = 2;
+WHERE oh.OrderID = 4;
 
 -- Print all orders for today
 SELECT oh.OrderID, oh.OrderDate, u.Username, pm.Name, pm.Price, od.Qty
